@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/12 18:10:10 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/13 19:45:11 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,30 @@
 
 char *get_next_line(int fd)
 {
-	static t_list *bufer;
+	static char *buffer;
+	char *str;
+	char *temp;
+	int n;
 	
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	if (bufer == 0)
-		bufer = ft_lstnew(ft_strdup(read(fd, bufer, BUFFER_SIZE)));
-	if (bufer == 0)
-		return (0);
-	return (0);
+	str = ft_strdup("");
+	n = 0;
+	while ((n = read(fd, buffer, BUFFER_SIZE)) > 0)
+	{
+		buffer[n] = 0;
+		temp = ft_strchr(buffer, '\n');
+		if (temp != 0)
+		{
+			*temp = 0;
+			temp = ft_strdup(temp + 1);
+			temp = ft_strchr(temp, '\n');
+			if (temp != 0)
+				temp = ft_strdup(temp + 1);
+			return (str);
+		}
+		temp = ft_strdup(buffer);
+		str = ft_strjoin(str, temp);
+	}
+	return (str);
 }
 
 int main()
