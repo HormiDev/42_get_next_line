@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/13 21:32:50 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:28:42 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
+t_list	*ft_lstnew(void *content);
+t_list	*ft_lstlast(t_list *lst);
+int		ft_lstsize(t_list *lst);
+char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *s1);
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *str, int c);

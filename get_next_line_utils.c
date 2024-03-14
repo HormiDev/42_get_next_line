@@ -6,11 +6,65 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:52:58 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/13 16:40:11 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:28:19 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+t_list	*ft_lstnew(void *content)
+{
+	t_list	*node;
+
+	node = malloc(sizeof(t_list));
+	if (node == 0)
+		return (0);
+	node -> content = content;
+	node -> next = NULL;
+	return (node);
+}
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (lst == 0)
+		return (0);
+	while (lst -> next != 0)
+	{
+		lst = lst -> next;
+	}
+	return (lst);
+}
+
+int	ft_lstsize(t_list *lst)
+{
+	int	cont;
+
+	if (lst == 0)
+		return (0);
+	cont = 1;
+	while (lst -> next != 0)
+	{
+		lst = lst -> next;
+		cont++;
+	}
+	return (cont);
+}
+
+char	*ft_strchr(const char *str, int c)
+{
+	char	cchar;
+
+	cchar = (char)c;
+	while (*str != '\0')
+	{
+		if (*str == cchar)
+			return ((char *)str);
+		str++;
+	}
+	if (cchar == '\0')
+		return ((char *)str);
+	return (0);
+}
 
 size_t	ft_strlen(const char *str)
 {
@@ -109,4 +163,32 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dst[cont] = 0;
 	}
 	return (srclen);
+}
+
+char *ft_super_strjoin(int count, ...)
+{
+    va_list args;
+    char *str;
+    int len = 0;
+    char *s;
+
+    va_start(args, count);
+    for (int i = 0; i < count; i++)
+    {
+        s = va_arg(args, char*);
+        len += strlen(s);
+    }
+    va_end(args);
+    str = malloc((len + 1) * sizeof(char));
+    if (str == 0)
+        return (0);
+    str[0] = '\0';
+    va_start(args, count);
+    for (int i = 0; i < count; i++)
+    {
+        s = va_arg(args, char*);
+        strcat(str, s);
+    }
+    va_end(args);
+    return str;
 }
