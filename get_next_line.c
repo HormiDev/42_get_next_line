@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/14 16:45:34 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/14 18:55:38 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,27 @@
 char	*strjoin_lst(t_list *lst, char *end)
 {
 	char	*str;
-	char	*tmp;
 	int		i;
 	int		j;
 
-	i = 0;
 	j = 0;
-	str = malloc(((ft_lstsize(lst) - 1) * BUFFER_SIZE + 1) * sizeof(char));
+	str = malloc(BUFFER_SIZE * (ft_lstsize(lst) - 1) 
+	+ (end - ft_lstlast(lst)->content) * sizeof(char));
 	if (str == 0)
 		return (0);
 	while (lst != 0)
 	{
-		tmp = lst -> content;
-		while (tmp[i] != '\0')
+		i = 0;
+		while (lst->content + i != end && i < BUFFER_SIZE)
 		{
-			str[j] = tmp[i];
+			str[j] = (char *)lst->content[i];
 			i++;
 			j++;
 		}
-		i = 0;
-		lst = lst -> next;
+		if (lst->content + i == end)
+			break ;
+		lst = lst->next;
 	}
-	str[j] = '\0';
-	free(end);
 	return (str);
 }
 

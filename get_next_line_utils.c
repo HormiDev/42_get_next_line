@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:52:58 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/14 16:28:19 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/14 18:56:35 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,32 +163,4 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dst[cont] = 0;
 	}
 	return (srclen);
-}
-
-char *ft_super_strjoin(int count, ...)
-{
-    va_list args;
-    char *str;
-    int len = 0;
-    char *s;
-
-    va_start(args, count);
-    for (int i = 0; i < count; i++)
-    {
-        s = va_arg(args, char*);
-        len += strlen(s);
-    }
-    va_end(args);
-    str = malloc((len + 1) * sizeof(char));
-    if (str == 0)
-        return (0);
-    str[0] = '\0';
-    va_start(args, count);
-    for (int i = 0; i < count; i++)
-    {
-        s = va_arg(args, char*);
-        strcat(str, s);
-    }
-    va_end(args);
-    return str;
 }
