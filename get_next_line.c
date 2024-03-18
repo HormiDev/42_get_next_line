@@ -6,11 +6,39 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/16 03:51:36 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/18 03:27:27 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+char *lstjoin(t_list *lst, char *line)
+{
+	int	cont;
+	int	cont2;
+
+	cont = 0;
+	while (lst->next != NULL)
+	{
+		cont2 = 0;
+		while (cont2 < BUFFER_SIZE)
+		{
+			line[cont] = lst->content[cont2];
+			cont++;
+			cont2++;
+		}
+		lst = lst->next;
+	}
+	cont2 = 0;
+	while (lst -> content[cont2] != '\n')
+	{
+		line[cont] = lst->content[cont2];
+		cont++;
+		cont2++;
+	}
+	line[cont] = '\n';
+	
+	return (line);
+}
 
 int	ft_lstsize(t_list *lst)
 {
@@ -27,7 +55,7 @@ int	ft_lstsize(t_list *lst)
 	return (cont);
 }
 
-int	*ft_strnchr(const char *str, int c, int len)
+int	ft_strnchr(const char *str, int c, int len)
 {
 	char	cchar;
 	int 	cont;
@@ -39,9 +67,7 @@ int	*ft_strnchr(const char *str, int c, int len)
 	while (cont < len)
 	{
 		if (str[cont] == cchar)
-		{
 			return (cont);
-		}
 		cont++;
 	}
 	return (-1);
@@ -58,21 +84,26 @@ t_list	*ft_lstlast(t_list *lst)
 	return (lst);
 }
 
-t_list	*ft_addlstnew(t_list *lst)
+t_list	*ft_addnewlst(t_list *lst)
 {
 	t_list	*node;
-
+	
+	if (lst == 0)
+	{
+		lst = malloc(sizeof(t_list));
+		if (lst == 0)
+			return (0);
+		lst -> content = malloc(sizeof(char) * BUFFER_SIZE);
+		lst -> next = NULL;
+		return (lst);
+	}
 	node = malloc(sizeof(t_list));
 	if (node == 0)
 		return (0);
 	node -> content = malloc(sizeof(char) * BUFFER_SIZE);
 	node -> next = NULL;
-	while (lst->next != NULL)
-	{
-		lst = lst->next;
-	}
-	lst->next = node;
-	return (node);
+	ft_lstlast(lst)->next = node;
+	return (lst);
 }
 
 char	*get_next_line(int fd)
@@ -81,16 +112,16 @@ char	*get_next_line(int fd)
 	char			*line;
 	
 	if (buffer == 0)
-		buffer = ft_addlstnew(buffer);
+		buffer = ft_addnewlst(buffer);
 	read(fd, buffer->content, BUFFER_SIZE);
-	while (ft_strnchr(buffer->content, '\n', BUFFER_SIZE) == -1)
+	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
 	{
-		buffer = ft_addlstnew(buffer);
-		read(fd, buffer->content, BUFFER_SIZE);
+		ft_addnewlst(buffer);
+		read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
 	}
 	line = malloc((ft_lstsize(buffer) - 1) * BUFFER_SIZE + 
-	ft_strnchr(buffer->content, '\n', BUFFER_SIZE) + 1);
-	// line = superjoin(buffer, line,);
+	ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) + 1);
+	line = lstjoin(buffer, line);
 	// nuevo nodo con el contenido restante
 	// buffer = cleanbuffer(buffer);
 	// buffer = nuevo nodo con el contenido restante
@@ -112,16 +143,16 @@ int main()
 
 
 	line = get_next_line(fd);
-	printf("%s/", line);
+	printf("/%s", line);
 	free(line);
 	line = get_next_line(fd);
-	printf("%s/", line);
+	printf("/%s", line);
 	free(line);
 	line = get_next_line(fd);
-	printf("%s/", line);
+	printf("/%s", line);
 	free(line);
 	line = get_next_line(fd);
-	printf("%s/", line);
+	printf("/%s", line);
 	free(line);
 
 	
