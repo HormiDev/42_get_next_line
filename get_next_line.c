@@ -6,37 +6,228 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/18 03:27:27 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/29 19:44:24 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-char *lstjoin(t_list *lst, char *line)
+
+int	ft_lstsize(t_list *lst)
 {
 	int	cont;
-	int	cont2;
+
+	if (lst == 0)
+		return (0);
+	cont = 1;
+	while (lst -> next != 0)
+	{
+		lst = lst -> next;
+		cont++;
+	}
+	return (cont);
+}
+
+t_list	*cleanbuffer(t_list *lst, int endline)
+{
+	t_list	*new;
+	int		cont;
+
+	new = malloc(sizeof(t_list));
+	if (new == 0)
+	{
+		ft_lstclear(&lst, free);
+		return (0);
+	}
+	new->content = malloc(sizeof(char) * ft_lstlast(lst)->lencontent - endline);
+	if (new->content == 0)
+	{
+		ft_lstclear(&lst, free);
+		return (0);
+	}
+	new->lencontent = ft_lstlast(lst)->lencontent - endline;
+	new->next = NULL;
+	cont = 0;
+	while (cont < new->lencontent)
+	{
+		new->content[cont] = ft_lstlast(lst)->content[endline + 1 + cont];
+		cont++;
+	}
+	ft_lstclear(&lst, free);
+	return (new);
+}
+
+void	ft_lstclear(t_list **lst, void (*del)(void*))
+{
+	t_list	*next;
+	t_list	*point;
+
+	if (lst != 0 && del != 0)
+	{
+		point = lst[0];
+		while (point != 0)
+		{
+			next = point->next;
+			del(point->content);
+			free(point);
+			point = next;
+		}
+		lst[0] = 0;
+	}
+}
+
+char	*lstjoin(t_list *lst, int endline)
+{
+	char	*line;
+	int		cont;
+	int		cont2;
+
+	line = malloc((ft_lstsize(lst) * BUFFER_SIZE + endline + 1) * sizeof(char));
+	if (line == 0)
+		return (0);
+	cont = 0;
+	while (lst->next != 0)
+	{
+		cont2 = 0;
+		while (cont2 < BUFFER_SIZE)
+			line[cont++] = lst->content[cont2++];
+		lst = lst -> next;
+	}
+	cont2 = 0;
+	while (lst->content[cont2] != '\n')
+		line[cont++] = lst->content[cont2++];
+	line[cont] = '\n';
+	line[cont + 1] = '\0';
+	return (line);
+}
+
+int	ft_strnchr(const char *str, int c, int len)
+{
+	char	cchar;
+	int		cont;
+
+	if (str == 0 || len < 0)
+		return (-1);
+	cont = 0;
+	cchar = (char)c;
+	while (cont < len)
+	{
+		if (str[cont] == cchar)
+		{
+			return (cont);
+		}
+		cont++;
+	}
+	return (-1);
+}
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (lst == 0)
+		return (0);
+	while (lst -> next != 0)
+	{
+		lst = lst -> next;
+	}
+	return (lst);
+}
+
+t_list	*ft_addnewlst(t_list *lst)
+{
+	t_list	*node;
+
+	node = malloc(sizeof(t_list));
+	if (node == 0)
+		return (0);
+	node->content = malloc(sizeof(char) * BUFFER_SIZE);
+	if (node->content == 0)
+	{
+		ft_lstclear(&lst, free);
+		return (0);
+	}
+	node->lencontent = BUFFER_SIZE;
+	node->next = NULL;
+	if (lst == 0)
+		return (node);
+	ft_lstlast(lst)->next = node;
+	return (lst);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_list	*buffer;
+	char			*line;
+	int				endline;
+
+	if (buffer == 0)
+	{
+		buffer = ft_addnewlst(buffer);
+		read(fd, buffer->content, BUFFER_SIZE);
+	}
+	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
+	{
+		buffer = ft_addnewlst(buffer);
+		if (buffer == 0)
+			return (0);
+		read(fd, buffer->content, BUFFER_SIZE);
+	}
+	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
+	line = lstjoin(buffer, endline);
+	if (line == 0)
+		return (0);
+	buffer = cleanbuffer(buffer, endline);
+	if (buffer == 0)
+		return (0);
+	return (line);
+}
+
+int main()
+{
+    int fd = open("pr2.txt", O_RDONLY);
+	char *line;
+    if (fd == -1)
+	{
+        printf("Error al abrir el archivo.\n");
+        return 1;
+    }
+
+	line = get_next_line(fd);
+	while (line != 0)
+	{
+		free(line);
+		line = get_next_line(fd);
+		printf("/%s\n", line);
+	}
+    close(fd);
+    return 0;
+}
+
+/*
+
+
+char	*lstjoin(t_list *lst, char *line)
+{
+	int cont;
+	int cont2;
 
 	cont = 0;
-	while (lst->next != NULL)
+	while (lst->next != 0)
 	{
 		cont2 = 0;
 		while (cont2 < BUFFER_SIZE)
 		{
 			line[cont] = lst->content[cont2];
 			cont++;
-			cont2++;
 		}
-		lst = lst->next;
+		lst = lst -> next;
 	}
 	cont2 = 0;
-	while (lst -> content[cont2] != '\n')
+	while (lst->content[cont2] != '\n')
 	{
 		line[cont] = lst->content[cont2];
 		cont++;
 		cont2++;
 	}
 	line[cont] = '\n';
-	
 	return (line);
 }
 
@@ -58,7 +249,7 @@ int	ft_lstsize(t_list *lst)
 int	ft_strnchr(const char *str, int c, int len)
 {
 	char	cchar;
-	int 	cont;
+	int		cont;
 
 	if (str == 0 || len < 0)
 		return (-1);
@@ -67,7 +258,9 @@ int	ft_strnchr(const char *str, int c, int len)
 	while (cont < len)
 	{
 		if (str[cont] == cchar)
+		{
 			return (cont);
+		}
 		cont++;
 	}
 	return (-1);
@@ -84,44 +277,39 @@ t_list	*ft_lstlast(t_list *lst)
 	return (lst);
 }
 
-t_list	*ft_addnewlst(t_list *lst)
+t_list	*ft_addlstnew(t_list *lst)
 {
 	t_list	*node;
-	
-	if (lst == 0)
-	{
-		lst = malloc(sizeof(t_list));
-		if (lst == 0)
-			return (0);
-		lst -> content = malloc(sizeof(char) * BUFFER_SIZE);
-		lst -> next = NULL;
-		return (lst);
-	}
+
 	node = malloc(sizeof(t_list));
 	if (node == 0)
 		return (0);
 	node -> content = malloc(sizeof(char) * BUFFER_SIZE);
 	node -> next = NULL;
-	ft_lstlast(lst)->next = node;
-	return (lst);
+	while (lst->next != NULL)
+	{
+		lst = lst->next;
+	}
+	lst->next = node;
+	return (node);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_list	*buffer;
 	char			*line;
-	
 	if (buffer == 0)
-		buffer = ft_addnewlst(buffer);
+		buffer = ft_addlstnew(buffer);
 	read(fd, buffer->content, BUFFER_SIZE);
-	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
+	while (ft_strnchr(buffer->content, '\n', BUFFER_SIZE) == -1)
 	{
-		ft_addnewlst(buffer);
-		read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
+		buffer = ft_addlstnew(buffer);
+		read(fd, buffer->content, BUFFER_SIZE);
 	}
-	line = malloc((ft_lstsize(buffer) - 1) * BUFFER_SIZE + 
-	ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) + 1);
-	line = lstjoin(buffer, line);
+	line = malloc(((ft_lstsize(buffer) - 1) * BUFFER_SIZE + ft_strnchr(buffer->content, '\n', BUFFER_SIZE) + 1) * sizeof(char));
+	if (line == 0)
+		return (0);
+	
 	// nuevo nodo con el contenido restante
 	// buffer = cleanbuffer(buffer);
 	// buffer = nuevo nodo con el contenido restante
@@ -130,32 +318,4 @@ char	*get_next_line(int fd)
 	
 	return (line);
 }
-
-int main()
-{
-    int fd = open("pr.txt", O_RDONLY);
-	char *line;
-    if (fd == -1) 
-	{
-        printf("Error al abrir el archivo.\n");
-        return 1;
-    }
-
-
-	line = get_next_line(fd);
-	printf("/%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("/%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("/%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("/%s", line);
-	free(line);
-
-	
-    close(fd);
-    return 0;
-}
+*/

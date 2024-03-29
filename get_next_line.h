@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/16 02:48:10 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/29 12:04:44 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 typedef struct s_list
 {
 	char			*content;
+	int				lencontent;
 	struct s_list	*next;
 }	t_list;
 
-
+void	ft_lstclear(t_list **lst, void (*del)(void*));
+t_list	*ft_lstlast(t_list *lst);
 
 #endif
