@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/29 19:44:24 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/03/30 16:39:19 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,31 @@ int	ft_lstsize(t_list *lst)
 
 t_list	*cleanbuffer(t_list *lst, int endline)
 {
-	t_list	*new;
 	int		cont;
+	t_list	*next;
+	char	*new;
 
-	new = malloc(sizeof(t_list));
-	if (new == 0)
+	while (lst->next != 0)
 	{
-		ft_lstclear(&lst, free);
+		next = lst->next;
+		free(lst->content);
+		free(lst);
+		lst = next;
+	}
+	if(lst->lencontent - endline < 0)
+	{
+		free(lst->content);
+		free(lst);
 		return (0);
 	}
-	new->content = malloc(sizeof(char) * ft_lstlast(lst)->lencontent - endline);
-	if (new->content == 0)
-	{
-		ft_lstclear(&lst, free);
-		return (0);
-	}
-	new->lencontent = ft_lstlast(lst)->lencontent - endline;
-	new->next = NULL;
-	cont = 0;
-	while (cont < new->lencontent)
-	{
-		new->content[cont] = ft_lstlast(lst)->content[endline + 1 + cont];
-		cont++;
-	}
-	ft_lstclear(&lst, free);
-	return (new);
+	new = malloc(sizeof(char) * (lst->lencontent - endline));
+	cont = -1;
+	while (cont++ < lst->lencontent - endline)
+		new[cont] = lst->content[endline + cont];
+	free(lst->content);
+	lst->content = new;
+	lst->lencontent = lst->lencontent - endline;
+	return (lst);
 }
 
 void	ft_lstclear(t_list **lst, void (*del)(void*))
@@ -190,7 +190,15 @@ int main()
         return 1;
     }
 
+
+	
 	line = get_next_line(fd);
+	printf("/%s\n", line);
+	free(line);
+	line = get_next_line(fd);
+	printf("/%s\n", line);
+	free(line);
+	/*line = get_next_line(fd);
 	while (line != 0)
 	{
 		free(line);
@@ -198,9 +206,48 @@ int main()
 		printf("/%s\n", line);
 	}
     close(fd);
+	free(line);
+    return 0;*/
+}
+/*
+void print_list(t_list *lst) {
+    t_list *current = lst;
+    int count = 1;
+
+    while (current != NULL) {
+        printf("Nodo %d: contenido = %s, longitud = %d\n", count, (char *)current->content, current->lencontent);
+        current = current->next;
+        count++;
+    }
+}
+*/
+/*
+int main() {
+    t_list *lst = NULL;
+
+    lst = ft_addnewlst(lst);
+    if (lst != NULL) {
+        strncpy(lst->content, "Nodo 1", BUFFER_SIZE);
+    }
+
+    lst = ft_addnewlst(lst);
+    if (lst != NULL && lst->next != NULL) {
+        strncpy(lst->next->content, "Nodo 2", BUFFER_SIZE);
+    }
+
+    lst = ft_addnewlst(lst);
+    if (lst != NULL && lst->next != NULL && lst->next->next != NULL) {
+        strncpy(lst->next->next->content, "Nodo 3", BUFFER_SIZE);
+    }
+
+    print_list(lst);
+
+    // Aquí deberías liberar la memoria de la lista
+    // ft_lstclear(&lst, free);
+
     return 0;
 }
-
+*/
 /*
 
 
