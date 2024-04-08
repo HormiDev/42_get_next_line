@@ -6,11 +6,29 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/08 22:09:35 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/08 22:42:27 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+buffer_lst	*ft_create_newlst(void)
+{
+	buffer_lst	*node;
+
+	node = malloc(sizeof(buffer_lst));
+	if (node == 0)
+		return (0);
+	node->content = malloc(sizeof(char) * BUFFER_SIZE);
+	if (node->content == 0)
+	{
+		free(node);
+		return (0);
+	}
+	node->lencontent = BUFFER_SIZE;
+	node->next = 0;
+	return (node);
+}
 
 int ft_buffer_lst_len(buffer_lst *lst)
 {
@@ -177,7 +195,7 @@ char	*get_next_line(int fd)
 
 	if (buffer == 0)
 	{
-		buffer = ft_addnewlst(buffer);
+		buffer = ft_create_newlst();
 		read(fd, buffer->content, BUFFER_SIZE);
 	}
 	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
