@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/03/30 14:33:10 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/08 15:21:23 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 
 #define BUFFER_SIZE 10
 
-typedef struct s_list
+typedef struct buffer_lst
 {
 	char			*content;
 	int				lencontent;
-	struct s_list	*next;
-}	t_list;
+	struct buffer_lst	*next;
+}	buffer_lst;
 
-void	ft_lstclear(t_list **lst, void (*del)(void*));
-t_list	*ft_lstlast(t_list *lst);
+void	ft_lstclear(buffer_lst **lst, void (*del)(void*));
+buffer_lst	*ft_lstlast(buffer_lst *lst);
 
 #endif
