@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/08 22:42:27 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/08 23:23:19 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 	}
 	new = malloc(sizeof(char) * (lst->lencontent - endline - 1));
 	cont = -1;
-	while (cont++ < lst->lencontent - endline - 1)
+	while (cont++ < lst->lencontent - endline - 2)
 		new[cont] = lst->content[endline + cont + 1];
 	free(lst->content);
 	lst->content = new;
@@ -116,7 +116,6 @@ char	*lstjoin(buffer_lst *lst, int endline)
 	int		cont2;
 
 	line = malloc((ft_buffer_lst_len(lst) + 1 + endline) * sizeof(char));
-	printf("%d\n", (ft_buffer_lst_len(lst) + 1 + endline));
 	if (line == 0)
 		return (0);
 	cont = 0;
@@ -204,6 +203,7 @@ char	*get_next_line(int fd)
 		if (buffer == 0)
 			return (0);
 		read(fd, buffer->content, BUFFER_SIZE);
+
 	}
 	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
 	line = lstjoin(buffer, endline);
@@ -215,8 +215,25 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+int main()
+{
+	int fd = open("pr2.txt", O_RDONLY);
+	char *line;
+	int cont = 0;
 
+	while (cont < 5)
+	{
+		
+		line = get_next_line(fd);
+		printf("%s", line);
+		free(line);
+		cont++;
+	}
+	close(fd);
+	return 0;
+}
 
+/*
 int main()
 {
     buffer_lst *lst = malloc(sizeof(buffer_lst));
@@ -256,11 +273,16 @@ int main()
 	printf("%s", line);
 	lst = cleanbuffer(lst, ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
 	printf("%d\n", lst->lencontent);
-	printf("%s", lst->content);
+	cont = 0;
+	while (cont < lst->lencontent)
+	{
+		write(1, &lst->content[cont], 1);
+		cont++;
+	}
 	ft_lstclear(&lst, free);
 	close(fd);
 	return 0;
-}
+}*/
 /*
 void print_list(t_list *lst) {
     t_list *current = lst;
