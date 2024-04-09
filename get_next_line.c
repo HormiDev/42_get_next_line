@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/08 23:23:19 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:24:32 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int ft_buffer_lst_len(buffer_lst *lst)
 	if (lst == 0)
 		return (0);
 	len = 0;
-	while (lst -> next != 0)
+	while (lst->next != 0)
 	{
 		len = len + lst->lencontent;
 		lst = lst -> next;
@@ -115,7 +115,7 @@ char	*lstjoin(buffer_lst *lst, int endline)
 	int		cont;
 	int		cont2;
 
-	line = malloc((ft_buffer_lst_len(lst) + 1 + endline) * sizeof(char));
+	line = malloc((ft_buffer_lst_len(lst) + endline + 1) * sizeof(char));
 	if (line == 0)
 		return (0);
 	cont = 0;
@@ -203,7 +203,6 @@ char	*get_next_line(int fd)
 		if (buffer == 0)
 			return (0);
 		read(fd, buffer->content, BUFFER_SIZE);
-
 	}
 	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
 	line = lstjoin(buffer, endline);
@@ -214,7 +213,7 @@ char	*get_next_line(int fd)
 		return (0);
 	return (line);
 }
-
+/*
 int main()
 {
 	int fd = open("pr2.txt", O_RDONLY);
@@ -225,15 +224,15 @@ int main()
 	{
 		
 		line = get_next_line(fd);
-		printf("%s", line);
+		printf("-%s", line);
 		free(line);
 		cont++;
 	}
 	close(fd);
 	return 0;
-}
+}*/
 
-/*
+
 int main()
 {
     buffer_lst *lst = malloc(sizeof(buffer_lst));
@@ -250,6 +249,7 @@ int main()
 	while (cont < 9)
 	{
 		read(fd, ft_lstlast(lst)->content, BUFFER_SIZE);
+		printf("%d\n", ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
 		ft_addnewlst(lst);
 		cont++;
 	}
@@ -282,7 +282,7 @@ int main()
 	ft_lstclear(&lst, free);
 	close(fd);
 	return 0;
-}*/
+}
 /*
 void print_list(t_list *lst) {
     t_list *current = lst;
