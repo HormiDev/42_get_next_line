@@ -6,11 +6,29 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/09 23:24:32 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:04:28 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void ft_printlst(buffer_lst *lst) {
+    buffer_lst *tmp = lst;
+
+    if (tmp == NULL) {
+        write(1, "La lista está vacía.\n", 20);
+        return;
+    }
+	write(1, "\n---------\n", 11);
+    while (tmp != NULL) {
+        write(1, tmp->content, tmp->lencontent);
+		printf(" --> lencontent: %d\n", tmp->lencontent);
+        tmp = tmp->next;
+    }
+	write(1, "---------\n", 10);
+}
+
+
 
 buffer_lst	*ft_create_newlst(void)
 {
@@ -202,8 +220,10 @@ char	*get_next_line(int fd)
 		buffer = ft_addnewlst(buffer);
 		if (buffer == 0)
 			return (0);
-		read(fd, buffer->content, BUFFER_SIZE);
+		read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
+		printf("|");
 	}
+	ft_printlst(buffer);
 	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
 	line = lstjoin(buffer, endline);
 	if (line == 0)
@@ -211,27 +231,9 @@ char	*get_next_line(int fd)
 	buffer = cleanbuffer(buffer, endline);
 	if (buffer == 0)
 		return (0);
+	ft_printlst(buffer);
 	return (line);
 }
-/*
-int main()
-{
-	int fd = open("pr2.txt", O_RDONLY);
-	char *line;
-	int cont = 0;
-
-	while (cont < 5)
-	{
-		
-		line = get_next_line(fd);
-		printf("-%s", line);
-		free(line);
-		cont++;
-	}
-	close(fd);
-	return 0;
-}*/
-
 
 int main()
 {
@@ -280,6 +282,22 @@ int main()
 		cont++;
 	}
 	ft_lstclear(&lst, free);
+	close(fd);
+	
+	//prueba de ft_strnchr
+	printf("\n\nprueba de ft_strnchr\n");
+	printf("%d\n", ft_strnchr("hola mundo \nque", '\n', 11));
+
+	//prueba de get_next_line
+	printf("\n\nprueba de get_next_line\n");
+	fd = open("pr2.txt", O_RDONLY);
+	line = get_next_line(fd);
+	while (line != 0)
+	{
+		printf("-%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
 	close(fd);
 	return 0;
 }
