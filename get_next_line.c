@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/12 22:04:28 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/17 00:58:41 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,8 @@ char	*get_next_line(int fd)
 	char			*line;
 	int				endline;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
 	if (buffer == 0)
 	{
 		buffer = ft_create_newlst();
@@ -218,9 +220,9 @@ char	*get_next_line(int fd)
 	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
 	{
 		buffer = ft_addnewlst(buffer);
-		if (buffer == 0)
+		ft_lstlast(buffer)->lencontent = read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
+		if (buffer == 0 || ft_lstlast(buffer)->lencontent == 0)
 			return (0);
-		read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
 		printf("|");
 	}
 	ft_printlst(buffer);
@@ -239,11 +241,11 @@ int main()
 {
     buffer_lst *lst = malloc(sizeof(buffer_lst));
 	buffer_lst *temp = lst;
-	
+
 	lst->content = malloc(sizeof(char) * BUFFER_SIZE);
 	lst->lencontent = BUFFER_SIZE;
 	lst->next = NULL;
-	
+
 	int fd = open("pr.txt", O_RDONLY);
 	int cont = 0;
 	int cont2 = 0;
@@ -294,7 +296,7 @@ int main()
 	line = get_next_line(fd);
 	while (line != 0)
 	{
-		printf("-%s", line);
+		printf("\n-%s", line);
 		free(line);
 		line = get_next_line(fd);
 	}
