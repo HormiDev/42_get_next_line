@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/17 22:54:16 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:38:50 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,6 @@ void	ft_printlst(buffer_lst *lst)
 }
 */
 
-buffer_lst	*ft_create_newlst(void)
-{
-	buffer_lst	*node;
-
-	node = malloc(sizeof(buffer_lst));
-	if (node == 0)
-		return (0);
-	node->content = malloc(sizeof(char) * BUFFER_SIZE);
-	if (node->content == 0)
-	{
-		free(node);
-		return (0);
-	}
-	node->lencontent = BUFFER_SIZE;
-	node->next = 0;
-	return (node);
-}
-
 int	ft_buffer_lst_len(buffer_lst *lst)
 {
 	int	len;
@@ -63,22 +45,6 @@ int	ft_buffer_lst_len(buffer_lst *lst)
 	}
 	return (len);
 }
-/*
-int	ft_lstsize(buffer_lst *lst)
-{
-	int	cont;
-
-	if (lst == 0)
-		return (0);
-	cont = 1;
-	while (lst -> next != 0)
-	{
-		lst = lst -> next;
-		cont++;
-	}
-	return (cont);
-}
-*/
 
 buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 {
@@ -109,85 +75,10 @@ buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 	return (lst);
 }
 
-void	ft_lstclear(buffer_lst **lst, void (*del)(void*))
-{
-	buffer_lst	*next;
-	buffer_lst	*point;
-
-	if (lst != 0 && del != 0)
-	{
-		point = lst[0];
-		while (point != 0)
-		{
-			next = point->next;
-			del(point->content);
-			free(point);
-			point = next;
-		}
-		lst[0] = 0;
-	}
-}
-
-char	*lstjoin(buffer_lst *lst, int endline)
-{
-	char	*line;
-	int		cont;
-	int		cont2;
-
-	line = malloc((ft_buffer_lst_len(lst) + endline + 1) * sizeof(char));
-	if (line == 0)
-		return (0);
-	cont = 0;
-	while (lst->next != 0)
-	{
-		cont2 = 0;
-		while (cont2 < lst->lencontent)
-			line[cont++] = lst->content[cont2++];
-		lst = lst -> next;
-	}
-	cont2 = 0;
-	while (cont2 < endline)
-		line[cont++] = lst->content[cont2++];
-	line[cont] = '\n';
-	line[cont + 1] = '\0';
-	return (line);
-}
-
-int	ft_strnchr(const char *str, int c, int len)
-{
-	char	cchar;
-	int		cont;
-
-	if (str == 0 || len < 0)
-		return (-1);
-	cont = 0;
-	cchar = (char)c;
-	while (cont < len)
-	{
-		if (str[cont] == cchar)
-		{
-			return (cont);
-		}
-		cont++;
-	}
-	return (-1);
-}
-
-buffer_lst	*ft_lstlast(buffer_lst *lst)
-{
-	if (lst == 0)
-		return (0);
-	while (lst -> next != 0)
-	{
-		lst = lst -> next;
-	}
-	return (lst);
-}
-
 buffer_lst	*ft_addnewlst(buffer_lst *lst)
 {
 	buffer_lst	*node;
-
+	
 	node = malloc(sizeof(buffer_lst));
 	if (node == 0)
 		return (0);
@@ -195,6 +86,7 @@ buffer_lst	*ft_addnewlst(buffer_lst *lst)
 	if (node->content == 0)
 	{
 		ft_lstclear(&lst, free);
+		ft_lstclear(&node, free);
 		return (0);
 	}
 	node->lencontent = BUFFER_SIZE;
@@ -215,7 +107,7 @@ char	*get_next_line(int fd)
 		return (0);
 	if (buffer == 0)
 	{
-		buffer = ft_create_newlst();
+		buffer = ft_addnewlst(buffer);
 		if (read(fd, buffer->content, BUFFER_SIZE) == 0)
 		{
 			ft_lstclear(&buffer, free);
@@ -232,9 +124,7 @@ char	*get_next_line(int fd)
 			ft_lstclear(&buffer, free);
 			return (line);
 		}
-		printf("|");
 	}
-	ft_printlst(buffer);
 	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
 	line = lstjoin(buffer, endline);
 	if (line == 0)
@@ -242,7 +132,6 @@ char	*get_next_line(int fd)
 	buffer = cleanbuffer(buffer, endline);
 	if (buffer == 0)
 		return (0);
-	ft_printlst(buffer);
 	return (line);
 }
 /*
@@ -467,5 +356,25 @@ char	*get_next_line(int fd)
 	//modificar lectura para que lea la cantidad necesaria
 	
 	return (line);
+}
+*/
+
+/*
+buffer_lst	*ft_create_newlst(void)
+{
+	buffer_lst	*node;
+
+	node = malloc(sizeof(buffer_lst));
+	if (node == 0)
+		return (0);
+	node->content = malloc(sizeof(char) * BUFFER_SIZE);
+	if (node->content == 0)
+	{
+		free(node);
+		return (0);
+	}
+	node->lencontent = BUFFER_SIZE;
+	node->next = 0;
+	return (node);
 }
 */

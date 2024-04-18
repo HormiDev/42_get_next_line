@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/08 15:21:23 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:05:06 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 10
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+# endif
 
 typedef struct buffer_lst
 {
@@ -27,7 +29,14 @@ typedef struct buffer_lst
 	struct buffer_lst	*next;
 }	buffer_lst;
 
-void	ft_lstclear(buffer_lst **lst, void (*del)(void*));
+char	*get_next_line(int fd);
+buffer_lst	*ft_addnewlst(buffer_lst *lst);
+buffer_lst	*cleanbuffer(buffer_lst *lst, int endline);
+int	ft_buffer_lst_len(buffer_lst *lst);
+buffer_lst	*ft_create_newlst(void);
 buffer_lst	*ft_lstlast(buffer_lst *lst);
+int	ft_strnchr(const char *str, int c, int len);
+void	ft_lstclear(buffer_lst **lst, void (*del)(void*));
+char	*lstjoin(buffer_lst *lst, int endline);
 
 #endif
