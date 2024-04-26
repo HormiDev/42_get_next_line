@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/18 18:38:50 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/26 21:46:44 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	*get_next_line(int fd)
 	char				*line;
 	int					endline;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (0);
 	if (buffer == 0)
 	{
