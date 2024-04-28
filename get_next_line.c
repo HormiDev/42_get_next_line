@@ -6,19 +6,19 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/27 13:57:38 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/28 23:43:56 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*
+
 void	ft_printlst(buffer_lst *lst)
 {
     buffer_lst	*tmp = lst;
 
-    if (tmp == NULL) {
-        write(1, "La lista está vacía.\n", 20);
+    if (tmp == 0) {
+        write(1, "\n---------\nbuffer (null)\n---------\n", 35);
         return;
     }
 	write(1, "\n---------\n", 11);
@@ -29,7 +29,7 @@ void	ft_printlst(buffer_lst *lst)
     }
 	write(1, "---------\n", 10);
 }
-*/
+
 
 int	ft_buffer_lst_len(buffer_lst *lst)
 {
@@ -59,7 +59,8 @@ buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 		free(lst);
 		lst = next;
 	}
-	if (lst->lencontent - endline < 0)
+	//printf("%d\n", lst->lencontent - endline);
+	if (lst->lencontent - endline -1 <= 0)
 	{
 		free(lst->content);
 		free(lst);
@@ -103,6 +104,7 @@ char	*get_next_line(int fd)
 	char				*line;
 	int					endline;
 
+	//ft_printlst(buffer);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		ft_lstclear(&buffer, free);
@@ -111,19 +113,21 @@ char	*get_next_line(int fd)
 	if (buffer == 0)
 	{
 		buffer = ft_addnewlst(buffer);
-		if (read(fd, buffer->content, BUFFER_SIZE) == 0)
+		buffer->lencontent = read(fd, buffer->content, BUFFER_SIZE);
+		if (buffer->lencontent <= 0)
 		{
 			ft_lstclear(&buffer, free);
 			return (0);
 		}
-	}
+	} 
 	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
 	{
 		buffer = ft_addnewlst(buffer);
 		ft_lstlast(buffer)->lencontent = read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
-		if (ft_lstlast(buffer)->lencontent < BUFFER_SIZE)
+		if (ft_lstlast(buffer)->lencontent <= 0)
 		{
-			line = lstjoin(buffer, ft_lstlast(buffer)->lencontent);
+			line = lstjoin(buffer, ft_lstlast(buffer)->lencontent - 1);
+			//ft_printlst(buffer);
 			ft_lstclear(&buffer, free);
 			return (line);
 		}
@@ -132,14 +136,8 @@ char	*get_next_line(int fd)
 	line = lstjoin(buffer, endline);
 	if (line == 0)
 		return (0);
+	//ft_printlst(buffer);
 	buffer = cleanbuffer(buffer, endline);
-	if (buffer->lencontent == 0)
-	{
-		ft_lstclear(&buffer, free);
-		return (line);
-	}
-	if (buffer == 0)
-		return (0);
 	return (line);
 }
 /*

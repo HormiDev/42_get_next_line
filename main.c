@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:32:59 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/18 18:35:41 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/28 13:02:11 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,28 @@ int main()
 	printf("%d\n", ft_strnchr("hola mundo \nque", '\n', 11));
 
 	//prueba de get_next_line
+	cont = 1;
 	printf("\n\nprueba de get_next_line\n");
-	fd = open("pr.txt", O_RDONLY);
+	fd = open("pr3.txt", O_RDONLY);
 	line = get_next_line(fd);
 	while (line != 0)
 	{
-		printf("\n-%s", line);
+		printf("\n :linea %d: ", cont);
+		cont2 = 0;
+		while (line[cont2] != '\0')
+		{
+			if (line[cont2] == '\n')
+				write(1, "\\n", 2);
+			else
+				write(1, &line[cont2], 1);
+			cont2++;
+		}
 		free(line);
 		line = get_next_line(fd);
+		cont++;
 	}
+	printf("\nlinea %d: %s fin", cont, line);
+	free(line);
 	close(fd);
 	return 0;
 }

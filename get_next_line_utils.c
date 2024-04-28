@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:52:58 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/27 13:59:23 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/28 17:58:37 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ char	*lstjoin(buffer_lst *lst, int endline)
 	int		cont;
 	int		cont2;
 
-	line = malloc((ft_buffer_lst_len(lst) + endline + 1) * sizeof(char));
+	//printf("endlinr: %d\n", endline);
+	line = malloc((ft_buffer_lst_len(lst) + endline + 2) * sizeof(char));
+	//printf("malloc: %d\n", ft_buffer_lst_len(lst) + endline + 2);
 	if (line == 0)
 		return (0);
 	cont = 0;
@@ -30,10 +32,9 @@ char	*lstjoin(buffer_lst *lst, int endline)
 		lst = lst -> next;
 	}
 	cont2 = 0;
-	while (cont2 < endline)
+	while (cont2 <= endline)
 		line[cont++] = lst->content[cont2++];
-	line[cont] = '\n';
-	line[cont + 1] = '\0';
+	line[cont] = '\0';
 	return (line);
 }
 
