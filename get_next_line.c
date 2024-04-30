@@ -6,18 +6,17 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/28 23:43:56 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/04/30 21:03:51 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-
+/*
 void	ft_printlst(buffer_lst *lst)
 {
     buffer_lst	*tmp = lst;
 
-    if (tmp == 0) {
+    if (tmp == 0){
         write(1, "\n---------\nbuffer (null)\n---------\n", 35);
         return;
     }
@@ -29,7 +28,7 @@ void	ft_printlst(buffer_lst *lst)
     }
 	write(1, "---------\n", 10);
 }
-
+*/
 
 int	ft_buffer_lst_len(buffer_lst *lst)
 {
@@ -120,7 +119,7 @@ char	*get_next_line(int fd)
 			return (0);
 		}
 	} 
-	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE) == -1)
+	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent) == -1)
 	{
 		buffer = ft_addnewlst(buffer);
 		ft_lstlast(buffer)->lencontent = read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
@@ -132,7 +131,7 @@ char	*get_next_line(int fd)
 			return (line);
 		}
 	}
-	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', BUFFER_SIZE);
+	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent);
 	line = lstjoin(buffer, endline);
 	if (line == 0)
 		return (0);
