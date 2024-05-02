@@ -6,21 +6,19 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:52:58 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/28 17:58:37 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 04:26:26 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*lstjoin(buffer_lst *lst, int endline)
+char	*lstjoin(t_buffer_lst *lst, int endline)
 {
 	char	*line;
 	int		cont;
 	int		cont2;
 
-	//printf("endlinr: %d\n", endline);
 	line = malloc((ft_buffer_lst_len(lst) + endline + 2) * sizeof(char));
-	//printf("malloc: %d\n", ft_buffer_lst_len(lst) + endline + 2);
 	if (line == 0)
 		return (0);
 	cont = 0;
@@ -38,10 +36,10 @@ char	*lstjoin(buffer_lst *lst, int endline)
 	return (line);
 }
 
-void	ft_lstclear(buffer_lst **lst, void (*del)(void*))
+void	ft_lstclear(t_buffer_lst **lst, void (*del)(void*))
 {
-	buffer_lst	*next;
-	buffer_lst	*point;
+	t_buffer_lst	*next;
+	t_buffer_lst	*point;
 
 	if (lst != 0 && del != 0)
 	{
@@ -77,7 +75,7 @@ int	ft_strnchr(const char *str, int c, int len)
 	return (-1);
 }
 
-buffer_lst	*ft_lstlast(buffer_lst *lst)
+t_buffer_lst	*ft_lstlast(t_buffer_lst *lst)
 {
 	if (lst == 0)
 		return (0);

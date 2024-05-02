@@ -6,15 +6,15 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/30 21:03:51 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 05:14:30 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 /*
-void	ft_printlst(buffer_lst *lst)
+void	ft_printlst(t_buffer_lst *lst)
 {
-    buffer_lst	*tmp = lst;
+    t_buffer_lst	*tmp = lst;
 
     if (tmp == 0){
         write(1, "\n---------\nbuffer (null)\n---------\n", 35);
@@ -30,7 +30,7 @@ void	ft_printlst(buffer_lst *lst)
 }
 */
 
-int	ft_buffer_lst_len(buffer_lst *lst)
+int	ft_buffer_lst_len(t_buffer_lst *lst)
 {
 	int	len;
 
@@ -45,11 +45,11 @@ int	ft_buffer_lst_len(buffer_lst *lst)
 	return (len);
 }
 
-buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
+t_buffer_lst	*cleanbuffer(t_buffer_lst *lst, int endline)
 {
-	int			cont;
-	buffer_lst	*next;
-	char		*new;
+	int				cont;
+	t_buffer_lst	*next;
+	char			*new;
 
 	while (lst->next != 0)
 	{
@@ -58,7 +58,6 @@ buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 		free(lst);
 		lst = next;
 	}
-	//printf("%d\n", lst->lencontent - endline);
 	if (lst->lencontent - endline -1 <= 0)
 	{
 		free(lst->content);
@@ -75,11 +74,11 @@ buffer_lst	*cleanbuffer(buffer_lst *lst, int endline)
 	return (lst);
 }
 
-buffer_lst	*ft_addnewlst(buffer_lst *lst)
+t_buffer_lst	*ft_addnewlst(t_buffer_lst *lst)
 {
-	buffer_lst	*node;
-	
-	node = malloc(sizeof(buffer_lst));
+	t_buffer_lst	*node;
+
+	node = malloc(sizeof(t_buffer_lst));
 	if (node == 0)
 		return (0);
 	node->content = malloc(sizeof(char) * BUFFER_SIZE);
@@ -99,11 +98,10 @@ buffer_lst	*ft_addnewlst(buffer_lst *lst)
 
 char	*get_next_line(int fd)
 {
-	static buffer_lst	*buffer;
+	static t_buffer_lst	*buffer;
 	char				*line;
 	int					endline;
 
-	//ft_printlst(buffer);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		ft_lstclear(&buffer, free);
@@ -118,32 +116,33 @@ char	*get_next_line(int fd)
 			ft_lstclear(&buffer, free);
 			return (0);
 		}
-	} 
-	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent) == -1)
+	}
+	while (ft_strnchr(ft_lstlast(buffer)->content, '\n',
+			ft_lstlast(buffer)->lencontent) == -1)
 	{
 		buffer = ft_addnewlst(buffer);
-		ft_lstlast(buffer)->lencontent = read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
+		ft_lstlast(buffer)->lencontent = read(
+			fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
 		if (ft_lstlast(buffer)->lencontent <= 0)
 		{
 			line = lstjoin(buffer, ft_lstlast(buffer)->lencontent - 1);
-			//ft_printlst(buffer);
 			ft_lstclear(&buffer, free);
 			return (line);
 		}
 	}
-	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent);
+	endline = ft_strnchr(
+			ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent);
 	line = lstjoin(buffer, endline);
 	if (line == 0)
 		return (0);
-	//ft_printlst(buffer);
 	buffer = cleanbuffer(buffer, endline);
 	return (line);
 }
 /*
 int main()
 {
-    buffer_lst *lst = malloc(sizeof(buffer_lst));
-	buffer_lst *temp = lst;
+    t_buffer_lst *lst = malloc(sizeof(t_buffer_lst));
+	t_buffer_lst *temp = lst;
 
 	lst->content = malloc(sizeof(char) * BUFFER_SIZE);
 	lst->lencontent = BUFFER_SIZE;
@@ -176,9 +175,11 @@ int main()
 		cont++;
 	}
 	printf("%d\n", ft_lstsize(lst));
-	char *line = lstjoin(lst, ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
+	char *line = lstjoin(lst, ft_strnchr(ft_lstlast(lst)->content, '\n',
+	 BUFFER_SIZE));
 	printf("%s", line);
-	lst = cleanbuffer(lst, ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
+	lst = cleanbuffer(lst, ft_strnchr(ft_lstlast(lst)->content, '\n',
+	 BUFFER_SIZE));
 	printf("%d\n", lst->lencontent);
 	cont = 0;
 	while (cont < lst->lencontent)
@@ -212,7 +213,8 @@ void print_list(t_list *lst) {
     int count = 1;
 
     while (current != NULL) {
-        printf("Nodo %d: contenido = %s, longitud = %d\n", count, (char *)current->content, current->lencontent);
+        printf("Nodo %d: contenido = %s, longitud = %d\n",
+		 count, (char *)current->content, current->lencontent);
         current = current->next;
         count++;
     }
@@ -350,7 +352,9 @@ char	*get_next_line(int fd)
 		buffer = ft_addlstnew(buffer);
 		read(fd, buffer->content, BUFFER_SIZE);
 	}
-	line = malloc(((ft_lstsize(buffer) - 1) * BUFFER_SIZE + ft_strnchr(buffer->content, '\n', BUFFER_SIZE) + 1) * sizeof(char));
+	line = malloc(((ft_lstsize(buffer) - 1) * BUFFER_SIZE 
+	+ ft_strnchr(buffer->content,
+	 '\n', BUFFER_SIZE) + 1) * sizeof(char));
 	if (line == 0)
 		return (0);
 	
@@ -365,11 +369,11 @@ char	*get_next_line(int fd)
 */
 
 /*
-buffer_lst	*ft_create_newlst(void)
+t_buffer_lst	*ft_create_newlst(void)
 {
-	buffer_lst	*node;
+	t_buffer_lst	*node;
 
-	node = malloc(sizeof(buffer_lst));
+	node = malloc(sizeof(t_buffer_lst));
 	if (node == 0)
 		return (0);
 	node->content = malloc(sizeof(char) * BUFFER_SIZE);
@@ -383,3 +387,44 @@ buffer_lst	*ft_create_newlst(void)
 	return (node);
 }
 */
+
+/*
+char	*get_next_line(int fd)
+{
+	static t_buffer_lst	*buffer;
+	char				*line;
+	int					endline;
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		ft_lstclear(&buffer, free);
+		return (0);
+	}
+	if (buffer == 0)
+	{
+		buffer = ft_addnewlst(buffer);
+		buffer->lencontent = read(fd, buffer->content, BUFFER_SIZE);
+		if (buffer->lencontent <= 0)
+		{
+			ft_lstclear(&buffer, free);
+			return (0);
+		}
+	}
+	while (ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent) == -1)
+	{
+		buffer = ft_addnewlst(buffer);
+		ft_lstlast(buffer)->lencontent = read(fd, ft_lstlast(buffer)->content, BUFFER_SIZE);
+		if (ft_lstlast(buffer)->lencontent <= 0)
+		{
+			line = lstjoin(buffer, ft_lstlast(buffer)->lencontent - 1);
+			ft_lstclear(&buffer, free);
+			return (line);
+		}
+	}
+	endline = ft_strnchr(ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent);
+	line = lstjoin(buffer, endline);
+	if (line == 0)
+		return (0);
+	buffer = cleanbuffer(buffer, endline);
+	return (line);
+}*/
