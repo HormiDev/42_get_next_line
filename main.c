@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:32:59 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/02 16:35:14 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 21:48:15 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,40 @@ int	ft_lstsize(t_buffer_lst *lst)
 	return (cont);
 }
 
+int main()
+{
+	int		cont;
+	int		cont2;
+	int		fd;
+	char	*line;
+
+	cont = 1;
+	printf("\n\nprueba de get_next_line\n");
+	fd = open("quijote.txt", O_RDONLY);
+	line = get_next_line(fd);
+	while (line != 0)
+	{
+		printf("\n :linea %d: ", cont);
+		cont2 = 0;
+		while (line[cont2] != '\0')
+		{
+			if (line[cont2] == '\n')
+				write(1, "\\n", 2);
+			else
+				write(1, &line[cont2], 1);
+			cont2++;
+		}
+		free(line);
+		line = get_next_line(fd);
+		cont++;
+	}
+	printf("\nlinea %d: %s fin", cont, line);
+	free(line);
+	close(fd);
+	return 0;
+}
+
+/*
 int main()
 {
     t_buffer_lst *lst = malloc(sizeof(t_buffer_lst));
@@ -83,7 +117,7 @@ int main()
 	//prueba de get_next_line
 	cont = 1;
 	printf("\n\nprueba de get_next_line\n");
-	fd = open("pr3.txt", O_RDONLY);
+	fd = open("quijote.txt", O_RDONLY);
 	line = get_next_line(fd);
 	while (line != 0)
 	{
@@ -105,4 +139,4 @@ int main()
 	free(line);
 	close(fd);
 	return 0;
-}
+}*/
