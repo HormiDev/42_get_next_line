@@ -6,13 +6,13 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:32:59 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/04/28 13:02:11 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:35:14 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_lstsize(buffer_lst *lst)
+int	ft_lstsize(t_buffer_lst *lst)
 {
 	int	cont;
 
@@ -29,8 +29,8 @@ int	ft_lstsize(buffer_lst *lst)
 
 int main()
 {
-    buffer_lst *lst = malloc(sizeof(buffer_lst));
-	buffer_lst *temp = lst;
+    t_buffer_lst *lst = malloc(sizeof(t_buffer_lst));
+	t_buffer_lst *temp = lst;
 
 	lst->content = malloc(sizeof(char) * BUFFER_SIZE);
 	lst->lencontent = BUFFER_SIZE;
