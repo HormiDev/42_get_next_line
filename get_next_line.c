@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/02 17:53:29 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:14:31 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ char	*get_next_line_2(int fd, t_buffer_lst **buffer)
 			return (line);
 		}
 	}
-	endline = ft_strnchr(
-			ft_lstlast(*buffer)->content, '\n', ft_lstlast(*buffer)->lencontent);
+	endline = ft_strnchr(ft_lstlast(
+				*buffer)->content, '\n', ft_lstlast(*buffer)->lencontent);
 	line = lstjoin(*buffer, endline);
 	if (line == 0)
 		return (0);
