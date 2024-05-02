@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/02 16:47:47 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/02 17:53:29 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,31 +96,31 @@ t_buffer_lst	*ft_addnewlst(t_buffer_lst *lst)
 	return (lst);
 }
 
-char	*get_next_line_2(int fd, t_buffer_lst *buffer)
+char	*get_next_line_2(int fd, t_buffer_lst **buffer)
 {
 	char			*line;
 	int				endline;
 	t_buffer_lst	*temp;
 
-	while (ft_strnchr(ft_lstlast(buffer)->content, '\n',
-			ft_lstlast(buffer)->lencontent) == -1)
+	while (ft_strnchr(ft_lstlast(*buffer)->content, '\n',
+			ft_lstlast(*buffer)->lencontent) == -1)
 	{
-		buffer = ft_addnewlst(buffer);
-		temp = ft_lstlast(buffer);
+		*buffer = ft_addnewlst(*buffer);
+		temp = ft_lstlast(*buffer);
 		temp->lencontent = read(fd, temp->content, BUFFER_SIZE);
-		if (ft_lstlast(buffer)->lencontent <= 0)
+		if (ft_lstlast(*buffer)->lencontent <= 0)
 		{
-			line = lstjoin(buffer, ft_lstlast(buffer)->lencontent - 1);
-			ft_lstclear(&buffer, free);
+			line = lstjoin(*buffer, ft_lstlast(*buffer)->lencontent - 1);
+			ft_lstclear(buffer, free);
 			return (line);
 		}
 	}
 	endline = ft_strnchr(
-			ft_lstlast(buffer)->content, '\n', ft_lstlast(buffer)->lencontent);
-	line = lstjoin(buffer, endline);
+			ft_lstlast(*buffer)->content, '\n', ft_lstlast(*buffer)->lencontent);
+	line = lstjoin(*buffer, endline);
 	if (line == 0)
 		return (0);
-	buffer = cleanbuffer(buffer, endline);
+	*buffer = cleanbuffer(*buffer, endline);
 	return (line);
 }
 
