@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/02 21:39:37 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:37:58 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
-# if BUFFER_SIZE > 2147483647 || BUFFER_SIZE < 1
+# if BUFFER_SIZE > 2147483647 || BUFFER_SIZE < 0
 #  undef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif

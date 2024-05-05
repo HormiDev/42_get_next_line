@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:32:59 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/03 16:09:59 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:53:48 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main()
 
 	cont = 1;
 	printf("\n\nprueba de get_next_line\n");
-	fd = open("pr4.txt", O_RDONLY);
+	fd = open("Files/pr4.txt", O_RDONLY);
 	line = get_next_line(fd);
 	while (line != 0)
 	{
