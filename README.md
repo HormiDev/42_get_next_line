@@ -1,3 +1,2 @@
 # 42_get_next_line
-
-## En desarrollo
+# `100/100`
