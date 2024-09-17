@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/14 22:58:11 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/09/14 23:01:33 by ide-dieg         ###   ########.fr       */
+/*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
+/*   Updated: 2024/09/17 22:17:58 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ char			*get_next_line(int fd);
 t_buffer_lst	*ft_addnewlst(t_buffer_lst *lst);
 t_buffer_lst	*cleanbuffer(t_buffer_lst *lst, int endline);
 int				ft_buffer_lst_len(t_buffer_lst *lst);
-t_buffer_lst	*ft_create_newlst(void);
 t_buffer_lst	*ft_lstlast(t_buffer_lst *lst);
 int				ft_strnchr(const char *str, int c, int len);
 void			ft_lstclear(t_buffer_lst **lst, void (*del)(void*));

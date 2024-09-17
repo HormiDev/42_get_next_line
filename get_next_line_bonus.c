@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/14 22:57:47 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/09/14 23:09:15 by ide-dieg         ###   ########.fr       */
+/*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
+/*   Updated: 2024/09/18 00:36:48 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,10 @@ char	*get_next_line_2(int fd, t_buffer_lst **buffer)
 
 char	*get_next_line(int fd)
 {
-	static t_buffer_lst	*buffer[256];
+	static t_buffer_lst	*buffer[1024];
 	char				*line;
 
-	if (fd < 0 || fd > 256 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		ft_lstclear(&buffer[fd], free);
 		return (0);
