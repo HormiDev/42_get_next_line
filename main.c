@@ -6,11 +6,11 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:32:59 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/05 19:53:48 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:19:39 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+/*#include "get_next_line.h"
 
 int	ft_lstsize(t_buffer_lst *lst)
 {
@@ -59,7 +59,7 @@ int main()
 	close(fd);
 	return 0;
 }
-
+*/
 /*
 int main()
 {
@@ -97,9 +97,11 @@ int main()
 		cont++;
 	}
 	printf("%d\n", ft_lstsize(lst));
-	char *line = lstjoin(lst, ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
+	char *line = lstjoin(lst, ft_strnchr
+		(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
 	printf("%s", line);
-	lst = cleanbuffer(lst, ft_strnchr(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
+	lst = cleanbuffer(lst, ft_strnchr
+		(ft_lstlast(lst)->content, '\n', BUFFER_SIZE));
 	printf("%d\n", lst->lencontent);
 	cont = 0;
 	while (cont < lst->lencontent)

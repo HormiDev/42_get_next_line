@@ -6,7 +6,7 @@
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/05/05 19:51:28 by ide-dieg         ###   ########.fr       */
+/*   Updated: 2024/10/02 22:23:38 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,9 @@ char	*get_next_line(int fd)
 	static t_buffer_lst	*buffer;
 	char				*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || fd > 1024)
+		return (0);
+	if (BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		ft_lstclear(&buffer, free);
 		return (0);
