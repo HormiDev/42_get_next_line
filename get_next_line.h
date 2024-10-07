@@ -5,18 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/07 18:51:16 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/09/20 21:25:57 by ide-dieg         ###   ########.fr       */
+/*   Created: 2024/10/03 23:41:35 by ide-dieg          #+#    #+#             */
+/*   Updated: 2024/10/07 21:58:17 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdio.h>
 # include <stdlib.h>
+# include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -34,12 +32,13 @@ typedef struct buffer_lst
 }	t_buffer_lst;
 
 char			*get_next_line(int fd);
-t_buffer_lst	*ft_addnewlst(t_buffer_lst *lst);
-t_buffer_lst	*cleanbuffer(t_buffer_lst *lst, int endline);
+char			*get_next_line_2(t_buffer_lst **buffer, int fd);
+int				ft_strnchr_gnl(const char *str, int c, int len);
 int				ft_buffer_lst_len(t_buffer_lst *lst);
-t_buffer_lst	*ft_lstlast(t_buffer_lst *lst);
-int				ft_strnchr(const char *str, int c, int len);
-void			ft_lstclear(t_buffer_lst **lst, void (*del)(void*));
 char			*lstjoin(t_buffer_lst *lst, int endline);
+t_buffer_lst	*ft_buffer_lst_last(t_buffer_lst *lst);
+t_buffer_lst	*ft_addnew_buffer_lst(t_buffer_lst *lst);
+char			*ft_buffer_lst_clear(t_buffer_lst **lst);
+t_buffer_lst	*cleanbuffer(t_buffer_lst *lst, int endline);
 
 #endif

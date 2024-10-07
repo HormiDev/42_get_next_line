@@ -5,30 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ide-dieg <ide-dieg@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/07 18:50:57 by ide-dieg          #+#    #+#             */
-/*   Updated: 2024/10/02 22:23:05 by ide-dieg         ###   ########.fr       */
+/*   Created: 2024/10/07 21:55:59 by ide-dieg          #+#    #+#             */
+/*   Updated: 2024/10/07 22:00:54 by ide-dieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-/*
-void	ft_printlst(t_buffer_lst *lst)
-{
-    t_buffer_lst	*tmp = lst;
-
-    if (tmp == 0){
-        write(1, "\n---------\nbuffer (null)\n---------\n", 35);
-        return;
-    }
-	write(1, "\n---------\n", 11);
-    while (tmp != NULL) {
-        write(1, tmp->content, tmp->lencontent);
-		printf(" --> lencontent: %d\n", tmp->lencontent);
-        tmp = tmp->next;
-    }
-	write(1, "---------\n", 10);
-}
-*/
 
 int	ft_buffer_lst_len(t_buffer_lst *lst)
 {
@@ -45,78 +27,72 @@ int	ft_buffer_lst_len(t_buffer_lst *lst)
 	return (len);
 }
 
-t_buffer_lst	*cleanbuffer(t_buffer_lst *lst, int endline)
+t_buffer_lst	*ft_addnew_buffer_lst(t_buffer_lst *lst)
 {
-	int				cont;
-	t_buffer_lst	*next;
-	char			*new;
+	t_buffer_lst	*new;
 
-	while (lst->next != 0)
+	new = malloc(sizeof(t_buffer_lst));
+	if (new == 0)
+		return (0);
+	new->content = malloc(sizeof(char) * BUFFER_SIZE);
+	if (new->content == 0)
 	{
-		next = lst->next;
-		free(lst->content);
-		free(lst);
-		lst = next;
-	}
-	if (lst->lencontent - endline -1 <= 0)
-	{
-		free(lst->content);
-		free(lst);
+		free(new);
 		return (0);
 	}
-	new = malloc(sizeof(char) * (lst->lencontent - endline - 1));
-	cont = -1;
-	while (cont++ < lst->lencontent - endline - 2)
-		new[cont] = lst->content[endline + cont + 1];
-	free(lst->content);
-	lst->content = new;
-	lst->lencontent = lst->lencontent - endline - 1;
-	return (lst);
-}
-
-t_buffer_lst	*ft_addnewlst(t_buffer_lst *lst)
-{
-	t_buffer_lst	*node;
-
-	node = malloc(sizeof(t_buffer_lst));
-	if (node == 0)
-		return (0);
-	node->content = malloc(sizeof(char) * BUFFER_SIZE);
-	if (node->content == 0)
-	{
-		ft_lstclear(&lst, free);
-		ft_lstclear(&node, free);
-		return (0);
-	}
-	node->lencontent = BUFFER_SIZE;
-	node->next = NULL;
+	new->lencontent = 0;
+	new->next = 0;
 	if (lst == 0)
-		return (node);
-	ft_lstlast(lst)->next = node;
+		return (new);
+	ft_buffer_lst_last(lst)->next = new;
 	return (lst);
 }
 
-char	*get_next_line_2(int fd, t_buffer_lst **buffer)
+char	*ft_buffer_lst_clear(t_buffer_lst **lst)
 {
-	char			*line;
-	int				endline;
-	t_buffer_lst	*temp;
+	t_buffer_lst	*next;
+	t_buffer_lst	*point;
 
-	while (ft_strnchr(ft_lstlast(*buffer)->content, '\n',
-			ft_lstlast(*buffer)->lencontent) == -1)
+	if (lst != 0)
 	{
-		*buffer = ft_addnewlst(*buffer);
-		temp = ft_lstlast(*buffer);
-		temp->lencontent = read(fd, temp->content, BUFFER_SIZE);
-		if (ft_lstlast(*buffer)->lencontent <= 0)
+		point = lst[0];
+		while (point != 0)
 		{
-			line = lstjoin(*buffer, ft_lstlast(*buffer)->lencontent - 1);
-			ft_lstclear(buffer, free);
+			next = point->next;
+			if (point->content != 0)
+				free(point->content);
+			free(point);
+			point = next;
+		}
+		lst[0] = 0;
+	}
+	return (0);
+}
+
+char	*ft_get_next_line_2(t_buffer_lst **buffer, int fd)
+{
+	char	*line;
+	int		endline;
+
+	while (*buffer == 0 || ft_strnchr_gnl(ft_buffer_lst_last(*buffer)->content,
+			'\n', ft_buffer_lst_last(*buffer)->lencontent) == -1)
+	{
+		*buffer = ft_addnew_buffer_lst(*buffer);
+		if (*buffer == 0)
+			return (ft_buffer_lst_clear(buffer));
+		ft_buffer_lst_last(*buffer)->lencontent = read(fd,
+			ft_buffer_lst_last(*buffer)->content, BUFFER_SIZE);
+		if (ft_buffer_lst_last(*buffer)->lencontent < 0)
+			return (ft_buffer_lst_clear(buffer));
+		if (ft_buffer_lst_last(*buffer)->lencontent == 0)
+		{
+			line = lstjoin(*buffer, ft_buffer_lst_last(*buffer)->lencontent -1);
+			ft_buffer_lst_clear(buffer);
 			return (line);
 		}
 	}
-	endline = ft_strnchr(ft_lstlast(
-				*buffer)->content, '\n', ft_lstlast(*buffer)->lencontent);
+	endline = ft_strnchr_gnl(ft_buffer_lst_last(*buffer)->content,
+			'\n', ft_buffer_lst_last(*buffer)->lencontent);
 	line = lstjoin(*buffer, endline);
 	*buffer = cleanbuffer(*buffer, endline);
 	return (line);
@@ -125,27 +101,8 @@ char	*get_next_line_2(int fd, t_buffer_lst **buffer)
 char	*get_next_line(int fd)
 {
 	static t_buffer_lst	*buffer[1024];
-	char				*line;
 
-	if (fd < 0 || fd > 1024)
-		return (0);
-	if (BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		ft_lstclear(&buffer[fd], free);
-		return (0);
-	}
-	if (buffer[fd] == 0)
-	{
-		buffer[fd] = ft_addnewlst(buffer[fd]);
-		buffer[fd]->lencontent = read(fd, buffer[fd]->content, BUFFER_SIZE);
-		if (buffer[fd]->lencontent <= 0)
-		{
-			ft_lstclear(&buffer[fd], free);
-			return (0);
-		}
-	}
-	line = get_next_line_2(fd, &buffer[fd]);
-	if (line == 0)
-		ft_lstclear(&buffer[fd], free);
-	return (line);
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
+		return (ft_buffer_lst_clear(&buffer[fd]));
+	return (ft_get_next_line_2(&buffer[fd], fd));
 }
